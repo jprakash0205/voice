@@ -3,5 +3,3 @@ language: python
 applications:
 - name: voc-analytics
 memory: 1024M
-
-command: python analytics.py
