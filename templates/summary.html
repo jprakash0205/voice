@@ -2,39 +2,36 @@
 {% block title %}Web Analytics - Summary{% endblock %}
 {% block head %}
 {{ super() }}
-	<script src="http://127.0.0.1:5001/a.js" type="text/javascript"></script>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="description" content="">
+		<meta name="keywords" content="">
+		<meta name="author" content="">
+		<meta charset="utf-8">
+	<script src="http://127.0.0.1:5002/a.js" type="text/javascript"></script>
+
+		<!-- <link href="../static/css/main.css" rel="stylesheet" type="text/css" /> -->
+
+		<!-- SUPPORT FOR IE6-8 OF HTML5 ELEMENTS -->
+		<!--[if lt IE 9]>
+					<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+			<![endif]-->
 {% endblock %}
 {% block page_content %}
-<h1>Welcome to Web Analytics</h1>
-<div class="panel panel-danger">
-    <div class="panel-heading">
-      <h3 class="panel-title">Total Count</h3>
-    </div>
-    <div class="panel-body">
-      {{ tot_cnt }}
-    </div>
-  </div>
-<div>
+<h2>
+<span class="label label-danger">Total Visits : {{ tot_cnt }}</span>
+<span class="label label-warning">Unique Visitors : {{ uqip }}</span>
+</h2>
+<p></p>
 <div class="row">
-	<div class="col-md-6">
-      <table class="table table-bordered">
-        <thead>
-          <tr>
-            <th>Total Count</th>
-          </tr>
-        </thead>
-        <tbody>
-        <tr><td>{{ tot_cnt }}</td></tr>
-        </tbody>
-       </table>
-    </div>
     <div class="col-md-6">
       <table class="table table-bordered">
         <thead>
+        <tr>
+            <th colspan="2" style="text-align:center; color:#b92c28">Hits By Domain</th>
+          </tr>
           <tr>
             <th>Domain Name</th>
-            <th>Hit</th>
-            
+            <th># of Hits</th>
           </tr>
         </thead>
         <tbody>
@@ -44,35 +41,109 @@
         </tbody>
        </table>
     </div>
-</div>
-<div class="row">
-	<div class="col-md-6">
-      <table class="table table-bordered">
-        <thead>
-          <tr>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-        <tr><td>{{ tot_cnt }}</td></tr>
-        </tbody>
-       </table>
-    </div>
     <div class="col-md-6">
       <table class="table table-bordered">
         <thead>
+        <tr>
+            <th colspan="2" style="text-align:center; color:#b92c28">Top 10 Pages</th>
+          </tr>
           <tr>
-            <th>Domain Name</th>
-            <th>Hit</th>
-            
+            <th>Page Title</th>
+            <th>Hits</th>
           </tr>
         </thead>
         <tbody>
-        {% for tp in tpg %}
-		<tr><td>{{ tp.title }}</td><td>{{ tp.tpc }}</td></tr>
+        {% for tp in tpg[:10] %}
+		<tr><td>{{ tp[0] }}</td><td>{{ tp[1] }}</td></tr>
 		{% endfor %}
         </tbody>
        </table>
     </div>
 </div>
+<div class="row">
+	<div class="col-md-6">
+      <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th colspan="2" style="text-align:center; color:#b92c28">Top 10 Pages - Last Modified Date</th>
+          </tr>
+          <tr>
+            <th>Page Title</th>
+            <th>Last Modified Date</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for tpm in tpg_m[:10] %}
+		<tr><td>{{ tpm[0] }}</td><td>{{ tpm[1] }}</td></tr>
+		{% endfor %}
+        </tbody>
+       </table>
+    </div>
+    	<div class="col-md-6">
+      <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th colspan="2" style="text-align:center; color:#b92c28">Top Browsers</th>
+          </tr>
+          <tr>
+            <th>Browser Type</th>
+            <th>Hits</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for app in appname[:10] %}
+		<tr><td>{{ app[0] }}</td><td>{{ app[1] }}</td></tr>
+		{% endfor %}
+        </tbody>
+       </table>
+    </div>
+</div>
+<p></p>
+<div  class="row">
+	<div class="col-sm-4">
+		<div class="list-group">
+		    <a href="javascript:void(0);" class="list-group-item active">
+		      Top Referring Pages</a>
+		    {% for tr in tref[:10] %}
+			    {% if tr[0] != '': %}
+			    <a href="javascript:void(0);" class="list-group-item">{{ tr[0] }}</a>
+			    {% endif %}
+		    {% endfor %}
+		</div>
+	</div>
+	<div class="col-sm-4">
+		<div class="list-group">
+		    <a href="javascript:void(0);" class="list-group-item active">
+		      Top Client IPs</a>
+		    {% for ti in tip[:10] %}
+			    {% if ti[0] != '': %}
+			    <a href="javascript:void(0);" class="list-group-item">{{ ti[0] }}</a>
+			    {% endif %}
+		    {% endfor %}
+		</div>
+	</div>
+</div>
+<p></p>
+<div id="chart_ID" class="chart" style="height: 100px; width: 500px"></div>
+		<script>
+			var chart_id = "chart_ID"
+			var series = [{'data': [1, 2, 3], 'name': 'Label1'}, {'data': [4, 5, 6], 'name': 'Label2'}]
+			var title = {'text': 'My Title'}
+			var xAxis = {'categories': ['xAxis Data1', 'xAxis Data2', 'xAxis Data3']}
+			var yAxis = {'title': {'text': 'yAxis Label'}}
+			var chart = {'renderTo': 'chart_ID', 'type': 'bar', 'height': 350}
+		</script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+			<script src="http://code.highcharts.com/highcharts.js"></script>
+			<script src="../static/js/main.js"></script>			
+<p></p>		
+<div class="panel panel-danger">
+    <div class="panel-heading">
+      <h3 class="panel-title">Total Count</h3>
+    </div>
+    <div class="panel-body">
+      {{ tot_cnt }}
+    </div>
+  </div>
+<div>
 {% endblock %}

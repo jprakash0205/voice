@@ -18,12 +18,12 @@ BEACON = b64decode('R0lGODlhAQABAIAAANvf7wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==
 # Store the database file in the app directory.
 APP_DIR = os.path.dirname(__file__)
 DATABASE_NAME = os.path.join(APP_DIR, 'analytics.db')
-DOMAIN = 'http://127.0.0.1:5001'  # TODO: change me.
+DOMAIN = 'http://127.0.0.1:5002'  # TODO: change me.
 
 # Simple JavaScript which will be included and executed on the client-side.
 JAVASCRIPT = """(function(){
-    var d=document,i=new Image,e=encodeURIComponent;
-    i.src='%s/a.gif?url='+e(d.location.href)+'&ref='+e(d.referrer)+'&t='+e(d.title)+'&ld='+e(d.location.href);
+    var d=document,i=new Image,e=encodeURIComponent,n=navigator;
+    i.src='%s/a.gif?url='+e(d.location.href)+'&ref='+e(d.referrer)+'&t='+e(d.title)+'&ck='+e(d.cookie)+'&lm='+e(d.lastModified)+'&an='+e(n.appName)+'&ld='+e(d.location.href);
     })()""".replace('\n', '')
 
 # Flask application settings.
@@ -55,6 +55,9 @@ class PageView(Model):
     title = TextField(default='')
     ip = CharField(default='')
     referrer = TextField(default='')
+    cookies = TextField(default='')
+    docmodified = TextField(default='')
+    bappname = TextField(default='')
     headers = JSONField()
     params = JSONField()
 
@@ -65,7 +68,9 @@ class PageView(Model):
     def create_from_request(cls):
         parsed = urlparse(request.args['url'])
         params = dict(parse_qsl(parsed.query))
-        print(params)
+        #print(request.args.get('ck'))
+        #print(request.args.get('lm'))
+        #print(request.args.get('an'))
 
         return PageView.create(
             domain=parsed.netloc,
@@ -73,6 +78,9 @@ class PageView(Model):
             title=request.args.get('t') or '',
             ip=request.headers.get('X-Forwarded-For', request.remote_addr),
             referrer=request.args.get('ref') or '',
+            cookies = request.args.get('ck'),
+            docmodified = request.args.get('lm'),
+            bappname = request.args.get('an'),
             headers=dict(request.headers),
             params=params)
 
@@ -108,12 +116,21 @@ def summary():
     tot_cnt = PageView.select().count()
     domain_q = PageView.select(PageView.domain,fn.count(PageView.domain).alias('dms')).group_by(PageView.domain).order_by(fn.count(PageView.domain).desc())
     tpg = PageView.select(PageView.title, fn.Count(PageView.id).alias('tpc')).group_by(PageView.title).order_by(fn.Count(PageView.id).desc()).tuples()
+    tpg_m = PageView.select(PageView.title,PageView.docmodified, fn.Count(PageView.id).alias('tpc')).group_by(PageView.title,PageView.docmodified).order_by(fn.Count(PageView.id).desc()).tuples()
+    appname = PageView.select(PageView.bappname, fn.Count(PageView.id).alias('appcnt')).group_by(PageView.bappname).order_by(fn.Count(PageView.id).desc()).tuples()
+    tref = PageView.select(PageView.referrer, fn.Count(PageView.id).alias('refcnt')).group_by(PageView.referrer).order_by(fn.Count(PageView.id).desc()).tuples()
+    tip = PageView.select(PageView.ip, fn.Count(PageView.id).alias('ipcnt')).group_by(PageView.ip).order_by(fn.Count(PageView.id).desc()).tuples()
+    uqip = PageView.select(PageView.ip).group_by(PageView.ip).count()
+    hour = fn.date_part('hour', PageView.timestamp) / 4
+    id_count = fn.Count(PageView.id)
+    mthr = PageView.select(hour, id_count).group_by(hour).order_by(id_count.desc()).tuples()
+    #print (PageView.select(hour, id_count).group_by(hour).order_by(id_count.desc()).tuples())[:]
     #domain_cnt = {pv.domain: pv.dms.split(',') for pv in domain_q[:10]}
     #print(domain_cnt)
-    return render_template('summary.html',tot_cnt=tot_cnt,domain_q=domain_q,tpg=tpg)
+    return render_template('summary.html',tot_cnt=tot_cnt,domain_q=domain_q,tpg=tpg,tpg_m=tpg_m,appname=appname,tref=tref,tip=tip,uqip=uqip)
 
 if __name__ == '__main__':
-    #database.create_tables([PageView], safe=True)
+    database.create_tables([PageView], safe=True)
     app.run(port=5002)  # Use Flask's builtin WSGI server.
     # Or for gevent,
     # from gevent.wsgi import WSGIServer

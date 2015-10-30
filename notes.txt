@@ -1,0 +1,83 @@
+git config --global http.proxy proxy.ebiz.verizon.com:80
+netsh winhttp import proxy source=ie
+
+…or create a new repository on the command line
+
+jprakash.ora@gmail.com
+Prakash82
+
+echo # voice >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git remote add origin https://github.com/jprakash0205/voice.git
+git push -u origin master
+…or push an existing repository from the command line
+
+
+git remote add origin https://github.com/jprakash0205/voice.git
+git push -u origin master
+
+
+webapp
+-------
+…or create a new repository on the command line
+
+
+echo # webapp >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git remote add origin https://github.com/jprakash0205/webapp.git
+git push -u origin master
+…or push an existing repository from the command line
+
+
+git remote add origin https://github.com/jprakash0205/webapp.git
+git push -u origin master
+
+
+Bootstrap
+http://getbootstrap.com/examples/theme/
+
+Peewee Migrate
+---------------
+title_field = CharField(default='')
+status_field = IntegerField(null=True)
+
+migrate(
+    migrator.add_column('some_table', 'title', title_field),
+    migrator.add_column('some_table', 'status', status_field),
+    migrator.drop_column('some_table', 'old_column'),
+)
+
+cookies = TextField(default='')
+docmodified = TextField(default='')
+bappname = TextField(default='')
+
+migrate(
+    migrator.add_column('PageView', 'cookies', cookies),
+    migrator.add_column('PageView', 'docmodified', docmodified),
+    migrator.add_column('PageView', 'bappname', bappname),
+)
+
+
+
+ for rec in PageView.select().tuples():
+     print(rec)
+
+
+Reports
+--------
+Total Hits
+PageView.select().count()
+
+Domain wise count
+q = PageView.select(PageView.domain,fn.count(PageView.domain)).group_by(PageView.domain).order_by(fn.count(PageView.domain).desc()).tuples()
+for p in q:
+    print(p)
+q = PageView.select(PageView.domain,fn.count(PageView.domain).alias('dms')).group_by(PageView.domain).order_by(fn.count(PageView.domain).desc())
+print {pv.domain: pv.dms.split(',') for pv in q[:10]}
+
+top pages
+tpg = base.select(PageView.title, fn.Count(PageView.id)).group_by(PageView.title).order_by(fn.Count(PageView.id).desc()).tuples()
