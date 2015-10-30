@@ -1,0 +1,22 @@
+language: python
+
+env:
+ - PORT=5001
+install:
+  - pip install -r requirements.txt
+
+applications:
+- name: voc-analytics
+memory: 1024M
+
+# command to run tests
+#script: python tests.py
+
+deploy:
+   edge: true
+   provider: cloudfoundry
+   username: vnirmalkumarece@gmail.com
+   password: Karuvadu123
+   api: https://api.run.pivotal.io
+   organization: voice
+   space: development
