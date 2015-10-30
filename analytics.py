@@ -29,6 +29,7 @@ JAVASCRIPT = """(function(){
 # Flask application settings.
 DEBUG = bool(os.environ.get('DEBUG')) or True
 SECRET_KEY = 'secret - change me'  # TODO: change me.
+PORT = os.environ.get('PORT')
 
 app = Flask(__name__)
 app.config.from_object(__name__)
@@ -113,7 +114,7 @@ def summary():
 
 if __name__ == '__main__':
     database.create_tables([PageView], safe=True)
-    app.run(host='0.0.0.0',port=5001)  # Use Flask's builtin WSGI server.
+    app.run(host='0.0.0.0',port=PORT)  # Use Flask's builtin WSGI server.
     # Or for gevent,
     # from gevent.wsgi import WSGIServer
     # WSGIServer(('', 5000), app).serve_forever()
