@@ -17,5 +17,3 @@ deploy:
    api: https://api.run.pivotal.io
    organization: voice
    space: development
-
-script: ./analytics.py
