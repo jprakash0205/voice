@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block title %}Web Analytics - Summary{% endblock %}
+{% block head %}
+{{ super() }}
+	<script src="http://127.0.0.1:5001/a.js" type="text/javascript"></script>
+{% endblock %}
+{% block page_content %}
+<h1>Welcome to Web Analytics</h1>
+<div class="panel panel-danger">
+    <div class="panel-heading">
+      <h3 class="panel-title">Total Count</h3>
+    </div>
+    <div class="panel-body">
+      {{ tot_cnt }}
+    </div>
+  </div>
+<div>
+<div class="row">
+	<div class="col-md-6">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>Total Count</th>
+          </tr>
+        </thead>
+        <tbody>
+        <tr><td>{{ tot_cnt }}</td></tr>
+        </tbody>
+       </table>
+    </div>
+    <div class="col-md-6">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>Domain Name</th>
+            <th>Hit</th>
+            
+          </tr>
+        </thead>
+        <tbody>
+        {% for dc in domain_q %}
+		<tr><td>{{ dc.domain }}</td><td>{{ dc.dms }}</td></tr>
+		{% endfor %}
+        </tbody>
+       </table>
+    </div>
+</div>
+<div class="row">
+	<div class="col-md-6">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+        <tr><td>{{ tot_cnt }}</td></tr>
+        </tbody>
+       </table>
+    </div>
+    <div class="col-md-6">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>Domain Name</th>
+            <th>Hit</th>
+            
+          </tr>
+        </thead>
+        <tbody>
+        {% for tp in tpg %}
+		<tr><td>{{ tp.title }}</td><td>{{ tp.tpc }}</td></tr>
+		{% endfor %}
+        </tbody>
+       </table>
+    </div>
+</div>
+{% endblock %}
