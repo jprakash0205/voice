@@ -114,7 +114,7 @@ def summary():
 
 if __name__ == '__main__':
     database.create_tables([PageView], safe=True)
-    app.run()  # Use Flask's builtin WSGI server.
+    app.run(port=5002)  # Use Flask's builtin WSGI server.
     # Or for gevent,
     # from gevent.wsgi import WSGIServer
     # WSGIServer(('', 5000), app).serve_forever()
