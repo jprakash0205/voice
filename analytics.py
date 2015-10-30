@@ -113,7 +113,7 @@ def summary():
     return render_template('summary.html',tot_cnt=tot_cnt,domain_q=domain_q,tpg=tpg)
 
 if __name__ == '__main__':
-    database.create_tables([PageView], safe=True)
+    #database.create_tables([PageView], safe=True)
     app.run(port=5002)  # Use Flask's builtin WSGI server.
     # Or for gevent,
     # from gevent.wsgi import WSGIServer
