@@ -29,7 +29,7 @@ JAVASCRIPT = """(function(){
 # Flask application settings.
 DEBUG = bool(os.environ.get('DEBUG')) or True
 SECRET_KEY = 'secret - change me'  # TODO: change me.
-PORT = os.environ.get('PORT')
+PORT = 5010
 
 app = Flask(__name__)
 app.config.from_object(__name__)
