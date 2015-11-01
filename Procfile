@@ -1,1 +1,1 @@
-web: gunicorn analytics:app
+web: pythhon manage.py runserver

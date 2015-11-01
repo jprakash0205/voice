@@ -3,3 +3,5 @@ applications:
 - name: voc-analytics
   memory: 1024M
   buildpack: https://github.com/cloudfoundry/python-buildpack
+  no-route: true
+  command: ./python manage.py runserver
