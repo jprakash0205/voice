@@ -1,5 +1,5 @@
 ---
 applications:
-- name: analytics
+- name: vocanalytics
   memory: 1024M
   buildpack: https://github.com/cloudfoundry/python-buildpack
