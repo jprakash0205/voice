@@ -131,10 +131,10 @@ def summary():
     #print(domain_cnt)
     return render_template('summary.html',tot_cnt=tot_cnt,domain_q=domain_q,tpg=tpg,tpg_m=tpg_m,appname=appname,tref=tref,tip=tip,uqip=uqip,mthr=mthr,bname=bname)
 
-#if __name__ == '__main__':
-    #database.create_tables([PageView], safe=True)
-    #app.run(port=5002)  # Use Flask's builtin WSGI server.
+if __name__ == '__main__':
+    database.create_tables([PageView], safe=True)
+    app.run(host='0.0.0.0',port=5002)  # Use Flask's builtin WSGI server.
     # Or for gevent,
     # from gevent.wsgi import WSGIServer
     # WSGIServer(('', 5000), app).serve_forever()
-    #database.close()
+    database.close()

@@ -4,6 +4,7 @@ env:
  - PORT=5010
 install:
   - pip install -U pip
+  - pip install --upgrade pip
   - pip install -r requirements.txt
 
 # command to run tests
