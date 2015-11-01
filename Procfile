@@ -1,1 +1,1 @@
-web: python analytics.py
+web: gunicorn analytics:app

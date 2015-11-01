@@ -3,5 +3,7 @@ venv
 app
 *.db
 config.py
-manage.py
 reports.py
+*main.css
+*main.js
+notes.txt
