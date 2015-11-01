@@ -1,7 +1,5 @@
 ---
-domain: voc.io
 applications:
 - name: analytics
   memory: 1024M
   buildpack: https://github.com/cloudfoundry/python-buildpack
-  no-route: true
