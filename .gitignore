@@ -4,6 +4,4 @@ app
 *.db
 config.py
 reports.py
-*main.css
-*main.js
-notes.txt
+*.txt
