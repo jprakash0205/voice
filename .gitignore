@@ -5,3 +5,4 @@ app
 config.py
 reports.py
 *.txt
+tmp

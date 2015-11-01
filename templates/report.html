@@ -1,0 +1,301 @@
+{% extends "base.html" %}
+{% block title %}VOC Analytics: Executive Dashboard{% endblock %}
+{% block head %}
+{{ super() }}
+  <!-- CUSTOM STYLES-->
+   <!-- <link href="../static/css/bootstrap.css" rel="stylesheet" /> -->
+  <!-- <link href="../static/css/font-awesome.css" rel="stylesheet" /> -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+  <!-- MORRIS CHART SCRIPTS --> 
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
+<!-- MORRIS CHART SCRIPTS --> 
+  <link rel="stylesheet" href="../static/css/custom.css" />
+  <!-- CUSTOM STYLES-->
+{% endblock %}
+{% block page_header %} <strong>{{ rpt }} Dashboard </strong>{% endblock %}
+{% block page_content %}
+<!-- MORRIS CHARTS --> 
+<div class="row"> 
+ <div class="col-md-6 col-sm-12 col-xs-12">                     
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <strong>Traffic Trend by Hours</strong>
+        </div>
+        <div class="panel-body">
+            <div id="Hour-Visits" style="height: 250px;"></div>
+        </div>
+    </div>
+  </div>
+  <div class="col-md-6 col-sm-12 col-xs-12">                     
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <strong>Top 10 Pages</strong>
+        </div>
+        <div class="panel-body">
+            <div id="Ten-Pages" style="height: 250px;"></div>
+        </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-6">
+   <div class="panel panel-default">
+      <div class="panel-heading">
+          Top Pages - Load Time
+      </div>
+      <div class="panel-body">
+          <div class="table-responsive">
+              <table class="table table-hover">
+                  <thead>
+                      <tr>
+                        <th>Page Title</th>
+                        <th>Load Time</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for pld in pl[:10] -%}
+                      <tr><td>{{ pld['title'] }}</td><td>{{ pld['mload'] }}</td></tr>
+                      {% endfor -%}
+                    </tbody>
+             </table>
+          </div>
+      </div>
+  </div>
+ </div>
+ <div class="col-md-6">
+   <div class="panel panel-default">
+      <div class="panel-heading">
+          Top Browsers
+      </div>
+      <div class="panel-body">
+          <div class="table-responsive">
+              <table class="table table-hover">
+                  <thead>
+                      <tr>
+                      <th>Browser Type</th>
+                      <th>Hits</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                      {% for app in appname[:10] -%}
+                      <tr><td>{{ app[0] }}
+                        {% if app[0] == 'IE' -%}<i class="fa fa-internet-explorer"></i>
+                        {% elif app[0] == 'Chrome' -%}<i class="fa fa-chrome"></i>
+                        {% elif app[0] == 'Firefox' %}<i class="fa fa-firefox"></i>
+                        {% elif app[0] == 'Opera' -%}<i class="fa fa-opera"></i>
+                        {% elif app[0] == 'Safari' -%}<i class="fa fa-safari"></i>
+                        {% else %}
+                        {% endif -%}
+                      </td>
+                      <td>{{ app[1] }}</td></tr>
+                      {% endfor -%}
+                  </tbody>
+             </table>
+          </div>
+      </div>
+  </div>
+ </div>
+</div>
+<div class="row">
+  <div class="col-md-6">
+   <div class="panel panel-default">
+      <div class="panel-heading">
+          Top Client IPs
+      </div>
+      <div class="panel-body">
+          <div class="table-responsive">
+              <table class="table table-hover">
+                  <thead>
+                      <tr>
+                        <th>Ip</th>
+                        <th>#</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for tc in tip[:10] -%}
+                      <tr><td>{{ tc[0] }}</td><td>{{ tc[1] }}</td></tr>
+                      {% endfor -%}
+                    </tbody>
+             </table>
+          </div>
+      </div>
+  </div>
+ </div>
+ <div class="col-md-6">
+   <div class="panel panel-default">
+      <div class="panel-heading">
+          Top Client OS
+      </div>
+      <div class="panel-body">
+          <div class="table-responsive">
+              <table class="table table-hover">
+                  <thead>
+                      <tr>
+                      <th>Operating System</th>
+                      <th>#</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                      {% for cos in tos[:10] -%}
+                      <tr><td>{{ cos['osname'] }}
+                      </td>
+                      <td>{{ cos['oscnt'] }}</td></tr>
+                      {% endfor -%}
+                  </tbody>
+             </table>
+          </div>
+      </div>
+  </div>
+ </div>
+</div>
+<div class="row">
+  <div class="col-md-6">
+   <div class="panel panel-default">
+      <div class="panel-heading">
+          Top Pages - Modified Time
+      </div>
+      <div class="panel-body">
+          <div class="table-responsive">
+              <table class="table table-hover">
+                  <thead>
+                      <tr>
+                        <th>Page Title</th>
+                        <th>Last Modified Time</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for tpm in tpg_m[:10] -%}
+                      <tr><td>{{ tpm[0] }}</td><td>{{ tpm[1] }}</td></tr>
+                      {% endfor -%}
+                    </tbody>
+             </table>
+          </div>
+      </div>
+  </div>
+ </div>
+ <div class="col-md-6">
+   <div class="panel panel-default">
+      <div class="panel-heading">
+          Top Referring Pages
+      </div>
+      <div class="panel-body">
+          <div class="table-responsive">
+              <table class="table table-hover">
+                  <thead>
+                      <tr>
+                      <th>Operating System</th>
+                      <th>#</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                      {% for tr in tref[:10] -%}
+                      <tr><td>{{ tr[0] }}
+                      </td>
+                      <td>{{ tr[1] }}</td></tr>
+                      {% endfor -%}
+                  </tbody>
+             </table>
+          </div>
+      </div>
+  </div>
+ </div>
+</div>
+<div class="row">
+  <div class="col-md-6 col-sm-12 col-xs-12">                     
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <strong>Ip Donut</strong>
+        </div>
+        <div class="panel-body">
+            <div id="Top-Domains" style="height: 250px;"></div>
+        </div>
+    </div>
+  </div>
+  <div class="col-md-6 col-sm-12 col-xs-12">                     
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <strong>Peak Day of Month</strong>
+        </div>
+        <div class="panel-body">
+            <div id="Top-Area" style="height: 250px;"></div>
+        </div>
+    </div>
+  </div>
+</div>
+ <!-- MORRIS CHARTS -->    
+ <!-- MORRIS CHART SCRIPTS --> 
+  <script>
+  new Morris.Line({
+    element: 'Hour-Visits',
+  data: [
+    {% for m in mthr%}
+    { "Hour": '{{ m["hour"] }}', Visits: {{ m["hcnt"] }} },
+    {% endfor %}
+  ],
+  xkey: 'Hour',
+  ykeys: ['Visits'],
+  labels: ['Visits'],
+  resize: true,
+  pointFillColors:['#ffffff'],
+  pointStrokeColors: ['#ff0000'],
+  parseTime: false
+});
+new  Morris.Bar({
+    element: 'Ten-Pages',
+    data: [
+      {% for tp in tpg[:10] %}
+      {PageName: '{{ tp[0] }}', Count: {{ tp[1] }}},
+      {% endfor %}
+    ],
+    xkey: 'PageName',
+    ykeys: ['Count'],
+    labels: ['Visit Count'],
+    barRatio: 0.4,
+    xLabelAngle: 45,
+    hideHover: 'auto'
+    });
+new Morris.Donut({
+  element: 'Top-Domains',
+  data: [
+    {% for td in tip -%}
+    {label: "{{ td[0] }}", value: {{ td[1] }}},
+    {% endfor -%}
+  ]
+});
+new Morris.Area({
+      element: 'Top-Area',
+      data:  [
+      {% for dm in dmthr%}
+      { "Day": '{{ dm["day"] }}', Hits: {{ dm["dycnt"] }} },
+      {% endfor %}
+    ],
+      xkey: 'Day',
+      ykeys: ['Hits'],
+      labels: ['Visits',],
+      fillOpacity: 0.6,
+      hideHover: 'auto',
+      behaveLikeLine: true,
+      resize: true,
+      pointFillColors:['#ffffff'],
+      pointStrokeColors: ['black'],
+      lineColors:['red','gray'],
+      parseTime: false
+  });
+  </script>
+  <!-- MORRIS CHART SCRIPTS --> 
+<p></p>
+<div  class="row">
+  <div>
+    <div class="list-group">
+        <a href="javascript:void(0);" class="list-group-item active">
+          Most Common - User Agents</a>
+        {% for ua in hd[:10] -%}
+          <a href="javascript:void(0);" class="list-group-item">{{ ua[0]['User-Agent'] }}</a>
+        {% endfor -%}
+    </div>
+  </div>
+</div>
+{% endblock %}

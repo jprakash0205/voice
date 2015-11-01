@@ -1,9 +1,27 @@
 {% extends "base.html" %}
-{% block title %}Web Analytics - Index{% endblock %}
-{% block head %}
-{{ super() }}
-	<script src="http://127.0.0.1:5002/a.js" type="text/javascript"></script>
+{% block title %}VOC Analytics - Index{% endblock %}
+{% block page_header %}
+<h2>Welcome to VOC Analytics </h2>
 {% endblock %}
 {% block page_content %}
-<h1>Hello Admin, Welcome to Web Analytics - VOICE</h1>
+<div  class="row">
+<div class="col-md-2">
+</div>
+  <div class="col-md-3">
+    <div class="list-group">
+		<a href="javascript:void(0);" class="list-group-item active"><strong>List of Properties analysed:</strong></a>
+		<a href="javascript:void(0);" class="list-group-item">Domain Name</a>
+		<a href="javascript:void(0);" class="list-group-item">Page Load Time</a>
+		<a href="javascript:void(0);" class="list-group-item">IP Address</a>
+		<a href="javascript:void(0);" class="list-group-item">Cookies</a>
+		<a href="javascript:void(0);" class="list-group-item">Referrer</a>
+		<a href="javascript:void(0);" class="list-group-item">Page Last Modified Time</a>
+		<a href="javascript:void(0);" class="list-group-item">Operating System</a>
+		<a href="javascript:void(0);" class="list-group-item">Browser</a>
+		<a href="javascript:void(0);" class="list-group-item">URL</a>
+		<a href="javascript:void(0);" class="list-group-item">Headers</a>
+		<a href="javascript:void(0);" class="list-group-item">Timestamp</a>
+   </div>
+  </div>
+</div>
 {% endblock %}
