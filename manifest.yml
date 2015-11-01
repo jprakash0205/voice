@@ -4,4 +4,3 @@ applications:
   memory: 1024M
   buildpack: https://github.com/cloudfoundry/python-buildpack
   no-route: true
-  command: pip install --upgrade pip
