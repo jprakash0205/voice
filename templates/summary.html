@@ -2,26 +2,128 @@
 {% block title %}Web Analytics - Summary{% endblock %}
 {% block head %}
 {{ super() }}
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<meta name="description" content="">
-		<meta name="keywords" content="">
-		<meta name="author" content="">
-		<meta charset="utf-8">
 	<script src="http://127.0.0.1:5002/a.js" type="text/javascript"></script>
-
-		<!-- <link href="../static/css/main.css" rel="stylesheet" type="text/css" /> -->
-
-		<!-- SUPPORT FOR IE6-8 OF HTML5 ELEMENTS -->
-		<!--[if lt IE 9]>
-					<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-			<![endif]-->
+  <!-- CUSTOM STYLES-->
+   <!-- <link href="../static/css/bootstrap.css" rel="stylesheet" /> -->
+  <!-- <link href="../static/css/font-awesome.css" rel="stylesheet" /> -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+  <!-- MORRIS CHART SCRIPTS --> 
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
+<!-- MORRIS CHART SCRIPTS --> 
+  <link rel="stylesheet" href="../static/css/custom.css" />
+  <!-- CUSTOM STYLES-->
 {% endblock %}
+{% block page_header %} Executive Summary {% endblock %}
 {% block page_content %}
-<h2>
-<span class="label label-danger">Total Visits : {{ tot_cnt }}</span>
-<span class="label label-warning">Unique Visitors : {{ uqip }}</span>
-</h2>
-<p></p>
+<div class="row">
+  <div class="col-md-3 col-sm-6 col-xs-6">           
+      <div class="panel panel-back noti-box">
+          <span class="icon-box bg-color-red set-icon">
+              <i class="fa fa-bolt"></i>
+          </span>
+          <div class="text-box" >
+              <p class="main-text">{{ tot_cnt|safe }}</p>
+              <p class="text-muted">Total Visits</p>
+          </div>
+      </div>
+  </div>
+  <div class="col-md-3 col-sm-6 col-xs-6">           
+      <div class="panel panel-back noti-box">
+          <span class="icon-box bg-color-blue set-icon">
+              <i class="fa fa-bullhorn"></i>
+          </span>
+          <div class="text-box" >
+              <p class="main-text">{{ uqip|safe }}</p>
+              <p class="text-muted">Unique Visitors</p>
+          </div>
+      </div>
+  </div>
+</div>
+<!-- MORRIS CHARTS --> 
+<div class="row"> 
+ <div class="col-md-6 col-sm-12 col-xs-12">                     
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <strong>Traffic Trend by Hours</strong>
+        </div>
+        <div class="panel-body">
+            <div id="Hour-Visits" style="height: 250px;"></div>
+        </div>
+    </div>
+  </div>
+  <div class="col-md-6 col-sm-12 col-xs-12">                     
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <strong>Top 10 Pages</strong>
+        </div>
+        <div class="panel-body">
+            <div id="Ten-Pages" style="height: 250px;"></div>
+        </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-6 col-sm-12 col-xs-12">                     
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <strong>Top 10 Pages</strong>
+        </div>
+        <div class="panel-body">
+            <div id="Top-Domains" style="height: 250px;"></div>
+        </div>
+    </div>
+  </div>
+</div>
+ <!-- MORRIS CHARTS -->    
+ <!-- MORRIS CHART SCRIPTS --> 
+  <script>
+  new Morris.Line({
+    element: 'Hour-Visits',
+  data: [
+    {% for m in mthr%}
+    { "x": '{{ m["hour"] }}', Visits: {{ m["hcnt"] }} },
+    {% endfor %}
+  ],
+  xkey: 'x',
+  ykeys: ['Visits'],
+  labels: ['Visits'],
+   parseTime: false
+});
+new  Morris.Bar({
+    element: 'Ten-Pages',
+    data: [
+      {% for tp in tpg[:10] %}
+      {PageName: '{{ tp[0].replace('Web Analytics -','').lstrip(' ') }}', Count: {{ tp[1] }}},
+      {% endfor %}
+      {PageName: 'iPhone 5', Count: 32}
+    ],
+    xkey: 'PageName',
+    ykeys: ['Count'],
+    labels: ['Visit Count'],
+    barRatio: 0.4,
+    xLabelAngle: 45,
+    hideHover: 'auto'
+    });
+new Morris.Donut({
+  element: 'Top-Domains',
+  data: [
+    {% for dc in domain_q -%}
+    {label: "{{ dc.domain }}", value: {{ dc.dms }}},
+    {% endfor -%}
+  ],
+  colors: [
+  '#ff0000',
+  '#00ff00',
+  '#0000ff'
+  ]
+});
+  </script>
+  <!-- MORRIS CHART SCRIPTS --> 
+
+<p></p> 
 <div class="row">
     <div class="col-md-6">
       <table class="table table-bordered">
@@ -35,27 +137,9 @@
           </tr>
         </thead>
         <tbody>
-        {% for dc in domain_q %}
-		<tr><td>{{ dc.domain }}</td><td>{{ dc.dms }}</td></tr>
-		{% endfor %}
-        </tbody>
-       </table>
-    </div>
-    <div class="col-md-6">
-      <table class="table table-bordered">
-        <thead>
-        <tr>
-            <th colspan="2" style="text-align:center; color:#b92c28">Top 10 Pages</th>
-          </tr>
-          <tr>
-            <th>Page Title</th>
-            <th>Hits</th>
-          </tr>
-        </thead>
-        <tbody>
-        {% for tp in tpg[:10] %}
-		<tr><td>{{ tp[0] }}</td><td>{{ tp[1] }}</td></tr>
-		{% endfor %}
+        {% for dc in domain_q -%}
+    		<tr><td>{{ dc.domain }}</td><td>{{ dc.dms }}</td></tr>
+    		{% endfor -%}
         </tbody>
        </table>
     </div>
@@ -73,70 +157,99 @@
           </tr>
         </thead>
         <tbody>
-        {% for tpm in tpg_m[:10] %}
-		<tr><td>{{ tpm[0] }}</td><td>{{ tpm[1] }}</td></tr>
-		{% endfor %}
+        {% for tpm in tpg_m[:10] -%}
+    		<tr><td>{{ tpm[0] }}</td><td>{{ tpm[1] }}</td></tr>
+    		{% endfor -%}
         </tbody>
        </table>
     </div>
-    	<div class="col-md-6">
-      <table class="table table-bordered">
-        <thead>
-        <tr>
-            <th colspan="2" style="text-align:center; color:#b92c28">Top Browsers</th>
-          </tr>
-          <tr>
-            <th>Browser Type</th>
-            <th>Hits</th>
-          </tr>
-        </thead>
-        <tbody>
-        {% for app in appname[:10] %}
-		<tr><td>{{ app[0] }}</td><td>{{ app[1] }}</td></tr>
-		{% endfor %}
-        </tbody>
-       </table>
-    </div>
+</div>
+<p></p>
+<div class="row">
+  <div class="col-md-6">
+   <div class="panel panel-default">
+      <div class="panel-heading">
+          Top 10 Pages
+      </div>
+      <div class="panel-body">
+          <div class="table-responsive">
+              <table class="table table-hover">
+                  <thead>
+                      <tr>
+                        <th>Page Title</th>
+                        <th>Hits</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for tp in tpg[:10] -%}
+                      <tr><td>{{ tp[0] }}</td><td>{{ tp[1] }}</td></tr>
+                      {% endfor -%}
+                    </tbody>
+             </table>
+          </div>
+      </div>
+  </div>
+ </div>
+ <div class="col-md-6">
+   <div class="panel panel-default">
+      <div class="panel-heading">
+          Top Browsers
+      </div>
+      <div class="panel-body">
+          <div class="table-responsive">
+              <table class="table table-hover">
+                  <thead>
+                      <tr>
+                      <th>Browser Type</th>
+                      <th>Hits</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                      {% for app in appname[:10] -%}
+                      <tr><td>{{ app[0] }}
+                        {% if app[0] == 'IE' -%}<i class="fa fa-internet-explorer"></i>
+                        {% elif app[0] == 'Chrome' -%}<i class="fa fa-chrome"></i>
+                        {% elif app[0] == 'Firefox' %}<i class="fa fa-firefox"></i>
+                        {% elif app[0] == 'Opera' -%}<i class="fa fa-opera"></i>
+                        {% elif app[0] == 'Safari' -%}<i class="fa fa-safari"></i>
+                        {% else %}
+                        {% endif -%}
+                      </td>
+                      <td>{{ app[1] }}</td></tr>
+                      {% endfor -%}
+                  </tbody>
+             </table>
+          </div>
+      </div>
+  </div>
+ </div>
 </div>
 <p></p>
 <div  class="row">
-	<div class="col-sm-4">
-		<div class="list-group">
-		    <a href="javascript:void(0);" class="list-group-item active">
-		      Top Referring Pages</a>
-		    {% for tr in tref[:10] %}
-			    {% if tr[0] != '': %}
-			    <a href="javascript:void(0);" class="list-group-item">{{ tr[0] }}</a>
-			    {% endif %}
-		    {% endfor %}
-		</div>
-	</div>
-	<div class="col-sm-4">
-		<div class="list-group">
-		    <a href="javascript:void(0);" class="list-group-item active">
-		      Top Client IPs</a>
-		    {% for ti in tip[:10] %}
-			    {% if ti[0] != '': %}
-			    <a href="javascript:void(0);" class="list-group-item">{{ ti[0] }}</a>
-			    {% endif %}
-		    {% endfor %}
-		</div>
-	</div>
+  <div class="col-sm-4">
+    <div class="list-group">
+        <a href="javascript:void(0);" class="list-group-item active">
+          Top Referring Pages</a>
+        {% for tr in tref[:10] -%}
+          {% if tr[0] != '': %}
+          <a href="javascript:void(0);" class="list-group-item">{{ tr[0] }}</a>
+          {% endif %}
+        {% endfor -%}
+    </div>
+  </div>
+  <div class="col-sm-4">
+    <div class="list-group">
+        <a href="javascript:void(0);" class="list-group-item active">
+          Top Client IPs</a>
+        {% for ti in tip[:10] -%}
+          {% if ti[0] != '': %}
+          <a href="javascript:void(0);" class="list-group-item">{{ ti[0] }}</a>
+          {% endif %}
+        {% endfor -%}
+    </div>
+  </div>
 </div>
 <p></p>
-<div id="chart_ID" class="chart" style="height: 100px; width: 500px"></div>
-		<script>
-			var chart_id = "chart_ID"
-			var series = [{'data': [1, 2, 3], 'name': 'Label1'}, {'data': [4, 5, 6], 'name': 'Label2'}]
-			var title = {'text': 'My Title'}
-			var xAxis = {'categories': ['xAxis Data1', 'xAxis Data2', 'xAxis Data3']}
-			var yAxis = {'title': {'text': 'yAxis Label'}}
-			var chart = {'renderTo': 'chart_ID', 'type': 'bar', 'height': 350}
-		</script>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
-			<script src="http://code.highcharts.com/highcharts.js"></script>
-			<script src="../static/js/main.js"></script>			
-<p></p>		
 <div class="panel panel-danger">
     <div class="panel-heading">
       <h3 class="panel-title">Total Count</h3>
@@ -146,4 +259,8 @@
     </div>
   </div>
 <div>
+  <h2>
+<span class="label label-danger">Total Visits : {{ tot_cnt }}</span>
+<span class="label label-warning">Unique Visitors : {{ uqip }}</span>
+</h2>
 {% endblock %}

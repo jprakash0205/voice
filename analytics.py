@@ -23,7 +23,8 @@ DOMAIN = 'http://127.0.0.1:5002'  # TODO: change me.
 # Simple JavaScript which will be included and executed on the client-side.
 JAVASCRIPT = """(function(){
     var d=document,i=new Image,e=encodeURIComponent,n=navigator;
-    i.src='%s/a.gif?url='+e(d.location.href)+'&ref='+e(d.referrer)+'&t='+e(d.title)+'&ck='+e(d.cookie)+'&lm='+e(d.lastModified)+'&an='+e(n.appName)+'&ld='+e(d.location.href);
+    var isOpera=!!window.opera||navigator.userAgent.indexOf(" OPR/")>=0,isFirefox="undefined"!=typeof InstallTrigger,isSafari=Object.prototype.toString.call(window.HTMLElement).indexOf("Constructor")>0,isChrome=!!window.chrome&&!isOpera,isIE=!!document.documentMode,b="";b=isIE?"IE":isChrome?"Chrome":isFirefox?"Firefox":isOpera?"Opera":isSafari?"Safari":"";
+    i.src='%s/a.gif?url='+e(d.location.href)+'&ref='+e(d.referrer)+'&t='+e(d.title)+'&ck='+e(d.cookie)+'&lm='+e(d.lastModified)+'&an='+e(b)+'&ld='+e(d.location.href);
     })()""".replace('\n', '')
 
 # Flask application settings.
@@ -121,18 +122,19 @@ def summary():
     tref = PageView.select(PageView.referrer, fn.Count(PageView.id).alias('refcnt')).group_by(PageView.referrer).order_by(fn.Count(PageView.id).desc()).tuples()
     tip = PageView.select(PageView.ip, fn.Count(PageView.id).alias('ipcnt')).group_by(PageView.ip).order_by(fn.Count(PageView.id).desc()).tuples()
     uqip = PageView.select(PageView.ip).group_by(PageView.ip).count()
-    hour = fn.date_part('hour', PageView.timestamp) / 4
+    hour = fn.date_part('hour', PageView.timestamp)
     id_count = fn.Count(PageView.id)
-    mthr = PageView.select(hour, id_count).group_by(hour).order_by(id_count.desc()).tuples()
+    mthr = PageView.select(hour.alias('hour'), id_count.alias('hcnt')).group_by(hour).order_by(hour.asc()).dicts()
+    bname = PageView.select(PageView.bappname.alias('brow'), fn.Count(PageView.id).alias('browcnt')).group_by(PageView.bappname).order_by(fn.Count(PageView.id).desc()).dicts()
     #print (PageView.select(hour, id_count).group_by(hour).order_by(id_count.desc()).tuples())[:]
     #domain_cnt = {pv.domain: pv.dms.split(',') for pv in domain_q[:10]}
     #print(domain_cnt)
-    return render_template('summary.html',tot_cnt=tot_cnt,domain_q=domain_q,tpg=tpg,tpg_m=tpg_m,appname=appname,tref=tref,tip=tip,uqip=uqip)
+    return render_template('summary.html',tot_cnt=tot_cnt,domain_q=domain_q,tpg=tpg,tpg_m=tpg_m,appname=appname,tref=tref,tip=tip,uqip=uqip,mthr=mthr,bname=bname)
 
-if __name__ == '__main__':
-    database.create_tables([PageView], safe=True)
-    app.run(port=5002)  # Use Flask's builtin WSGI server.
+#if __name__ == '__main__':
+    #database.create_tables([PageView], safe=True)
+    #app.run(port=5002)  # Use Flask's builtin WSGI server.
     # Or for gevent,
     # from gevent.wsgi import WSGIServer
     # WSGIServer(('', 5000), app).serve_forever()
-    database.close()
+    #database.close()
