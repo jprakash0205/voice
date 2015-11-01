@@ -1,5 +1,6 @@
-language: python
-
+---
 applications:
 - name: voc-analytics
-memory: 1024M
+  memory: 1024M
+  buildpack: https://github.com/cloudfoundry/python-buildpack
+  command: python manage.py runserver
