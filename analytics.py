@@ -9,7 +9,6 @@ from flask.ext.bootstrap import Bootstrap
 
 from flask import Flask, Response, abort, request, render_template
 from peewee import *
-#from playhouse.berkeleydb import BerkeleyDatabase  # Optional.
 
 
 # 1 pixel GIF, base64-encoded.
@@ -18,10 +17,10 @@ BEACON = b64decode('R0lGODlhAQABAIAAANvf7wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==
 # Store the database file in the app directory.
 APP_DIR = os.path.dirname(__file__)
 DATABASE_NAME = os.path.join(APP_DIR, 'analytics.db')
-DOMAIN = 'http://vocanalytics.cfapps.io/'  # TODO: change me.
+DOMAIN = 'http://vocanalytics.cfapps.io/'  
 #DOMAIN = 'http://vocanalytics.cfapps.io/'  # for CF
 
-# Simple JavaScript which will be included and executed on the client-side.
+
 JAVASCRIPT1 = """(function(){
     var d=document,i=new Image,e=encodeURIComponent,n=navigator,w=window,tt=new Date,tts=tt.getTime();
     var isOpera=!!window.opera||navigator.userAgent.indexOf(" OPR/")>=0,isFirefox="undefined"!=typeof InstallTrigger,isSafari=Object.prototype.toString.call(window.HTMLElement).indexOf("Constructor")>0,isChrome=!!window.chrome&&!isOpera,isIE=!!document.documentMode,b="";b=isIE?"IE":isChrome?"Chrome":isFirefox?"Firefox":isOpera?"Opera":isSafari?"Safari":"";
@@ -36,7 +35,7 @@ n.src="%s/a.gif?url="+o(e.location.href)+"&ref="+o(e.referrer)+"&t="+o(e.title)+
 
 # Flask application settings.
 DEBUG = bool(os.environ.get('DEBUG')) or True
-SECRET_KEY = 'secret - change me'  # TODO: change me.
+SECRET_KEY = 'jjppcovi5577889933$'  
 PORT = 5010
 
 app = Flask(__name__)
